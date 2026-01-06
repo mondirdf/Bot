@@ -20,3 +20,18 @@ export function runStudyPlanning(
     pomodoroMinutes
   );
 }
+import { supabase } from "./supabaseClient";
+
+async function loadCompletedStudySessions(
+  userId: string
+): Promise<CompletedSession[]> {
+  const { data, error } = await supabase
+    .from("events")
+    .select("payload")
+    .eq("user_id", userId)
+    .eq("type", "study_completed_session");
+
+  if (error || !data) return [];
+
+  return data.map(row => row.payload as CompletedSession);
+}

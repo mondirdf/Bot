@@ -35,3 +35,19 @@ async function loadCompletedStudySessions(
 
   return data.map(row => row.payload as CompletedSession);
 }
+export async function runStudyPlanningFromDB(
+  userId: string,
+  tasks: Task[],
+  preferences: UserPreferences,
+  currentDay: number,
+  pomodoroMinutes: number
+): Promise<ScheduleProposal> {
+  const completedSessions = await loadCompletedStudySessions(userId);
+
+  return generateProposedWeeklySchedule(
+    tasks,
+    preferences,
+    currentDay,
+    pomodoroMinutes
+  );
+}
